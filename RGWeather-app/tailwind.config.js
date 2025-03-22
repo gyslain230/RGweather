@@ -9,7 +9,11 @@ module.exports = {
     extend: {},
   },
   variants: {
-    extend: {},
+    extend: {
+      colors: {
+        customGray: "#636060", // You can name it "customGray" or anything you like
+      },
+    },
   },
   plugins: [],
 };
