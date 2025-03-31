@@ -4,6 +4,7 @@ import WeatherCard from "./components/WeatherCard";
 import SearchBar from "./components/SearchBar";
 import { useState } from "react";
 import WeatherBox from "./components/WeatherBox";
+import Random from "./components/Suggestions";
 
 function App() {
   const [city, setCity] = useState("");
@@ -64,7 +65,7 @@ function App() {
 
   return (
     <>
-      <div className="flex -ml-50 mb-5 -mt-90  ">
+      <div className="flex -ml-50 m-auto  -mt-90   ">
         <img src="/logo.png" alt="weather logo" className=" size-20" />
         <h1 className="mt-4 ">RGWeather</h1>
       </div>
@@ -105,6 +106,9 @@ function App() {
           />
         )}
           */}
+      </div>
+      <div>
+        <Random />
       </div>
     </>
   );

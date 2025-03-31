@@ -18,6 +18,7 @@ function SearchBar({ city, setCity, handleSearch, loading, error }) {
           Search
         </button>
       </div>
+      {/* loading animation and error display */}
 
       <div className="mt-4">
         {loading && (
