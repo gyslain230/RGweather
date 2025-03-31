@@ -24,7 +24,7 @@ function WeatherBox({
           <img
             src={`http://openweathermap.org/img/wn/${weatherData.weather[0].icon}@4x.png`}
             alt={weatherData.weather[0].description}
-            className="w-9 h-9 mx-auto "
+            className="w-15 h-15 mx-auto "
           />
           <div className="text-4xl font-bold">
             {" "}

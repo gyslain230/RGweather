@@ -12,6 +12,8 @@ function App() {
   const [error, setError] = useState("");
   const [isCelsius, setIsCelsius] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
+  // Add new state for forecast
+  const [forecastData, setForecastData] = useState(null);
 
   const API_KEY = "f6e44c06f297e53dedc2ef34ca50548e";
   const BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
@@ -29,7 +31,16 @@ function App() {
       }
 
       const data = await response.json();
+      // Fetch 5-day forecast
+      const forecastResponse = await fetch(
+        `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&units=metric&appid=${API_KEY}`
+      );
+
+      if (!forecastResponse.ok) throw new Error("Forecast data unavailable");
+      const forecastData = await forecastResponse.json();
+
       setWeatherData(data);
+      setForecastData(forecastData);
       setLoading(false);
     } catch (err) {
       setError(err.message);
@@ -79,6 +90,7 @@ function App() {
             : weatherData && (
                 <WeatherCard
                   weatherData={weatherData}
+                  forecastData={forecastData}
                   isCelsius={isCelsius}
                   onCollapse={() => setIsExpanded(false)}
                   toggleTemperatureUnit={() => setIsCelsius(!isCelsius)}

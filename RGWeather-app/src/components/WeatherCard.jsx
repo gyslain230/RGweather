@@ -1,12 +1,31 @@
 // WeatherCard.jsx (Child Component)
+import ForecastItem from "./Forecast";
 function WeatherCard({
   weatherData,
+  forecastData,
   isCelsius,
   toggleTemperatureUnit,
   onCollapse,
 }) {
   const convertTemp = (temp) => {
     return isCelsius ? temp : (temp * 9) / 5 + 32;
+  };
+  // Process forecast data to get daily forecasts
+  const processForecast = () => {
+    if (!forecastData) return [];
+
+    const dailyForecasts = [];
+    const seenDays = new Set();
+
+    forecastData.list.forEach((forecast) => {
+      const date = new Date(forecast.dt * 1000).toLocaleDateString();
+      if (!seenDays.has(date) && dailyForecasts.length < 5) {
+        seenDays.add(date);
+        dailyForecasts.push(forecast);
+      }
+    });
+
+    return dailyForecasts;
   };
 
   return (
@@ -64,6 +83,20 @@ function WeatherCard({
               <p>{weatherData.main.pressure} hPa</p>
             </div>
           </div>
+        </div>
+      </div>
+      <div className="mt-6">
+        <h3 className="text-lg font-semibold mb-4 text-white">
+          5-Day Forecast
+        </h3>
+        <div className="grid grid-cols-5 gap-3">
+          {processForecast().map((forecast, index) => (
+            <ForecastItem
+              key={index}
+              forecast={forecast}
+              isCelsius={isCelsius}
+            />
+          ))}
         </div>
       </div>
     </div>

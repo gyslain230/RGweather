@@ -20,7 +20,11 @@ function SearchBar({ city, setCity, handleSearch, loading, error }) {
       </div>
 
       <div className="mt-4">
-        {loading && <div className="text-white text-center">Loading...</div>}
+        {loading && (
+          <div className="text-center p-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-sky-300 mx-auto"></div>
+          </div>
+        )}
         <ErrorMessage error={error} />
       </div>
     </form>
