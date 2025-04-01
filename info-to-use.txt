@@ -1,6 +1,0 @@
-Api end point: 
-5 days forecast: api.openweathermap.org/data/2.5/forecast?q=kigali,rwanda&APPID=f6e44c06f297e53dedc2ef34ca50548e
-current weather data: api.openweathermap.org/data/2.5/weather?q=kigali,rwanda&APPID=f6e44c06f297e53dedc2ef34ca50548e
-#######################3
-API key: f6e44c06f297e53dedc2ef34ca50548e
-
