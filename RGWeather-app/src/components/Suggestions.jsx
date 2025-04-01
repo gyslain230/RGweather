@@ -49,33 +49,37 @@ function Suggestions({ onCitySelect }) {
     return <div className="text-center p-4">Loading suggestions...</div>;
 
   return (
-    <div className="suggestions-container mt-8 px-4">
-      {/* First row of 3 cities */}
-      <div className="flex flex-wrap justify-center gap-4 mb-4">
-        {randomCitiesWeather.slice(0, 3).map((weatherData, index) => (
-          <div key={index} className="flex-1 min-w-[240px] max-w-[300px]">
-            <WeatherBox
-              weatherData={weatherData}
-              isCelsius={true}
-              onExpand={() => onCitySelect?.(weatherData.name)}
-            />
-          </div>
-        ))}
-      </div>
+    <>
+      <h1 className="mb-4">Suggestions:</h1>
+      <div className="suggestions-container mt-8 px-4 grid grid-cols-2 md:grid-cols-1    lg:grid-cols-1   gap-4 justify-items-cente sm:scale-70 md:scale-80 lg:scale-100  transition-transform">
+        {/* First row of 3 cities */}
 
-      {/* Second row of 3 cities */}
-      <div className="flex flex-wrap justify-center gap-4">
-        {randomCitiesWeather.slice(3, 6).map((weatherData, index) => (
-          <div key={index + 3} className="flex-1 min-w-[240px] max-w-[300px]">
-            <WeatherBox
-              weatherData={weatherData}
-              isCelsius={true}
-              onExpand={() => onCitySelect?.(weatherData.name)}
-            />
-          </div>
-        ))}
+        <div className="flex flex-wrap justify-center gap-4 mb-4">
+          {randomCitiesWeather.slice(0, 3).map((weatherData, index) => (
+            <div key={index} className="flex-1 min-w-[240px] max-w-[300px]">
+              <WeatherBox
+                weatherData={weatherData}
+                isCelsius={true}
+                onExpand={() => onCitySelect?.(weatherData.name)}
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Second row of 3 cities */}
+        <div className="flex flex-wrap justify-center gap-4">
+          {randomCitiesWeather.slice(3, 6).map((weatherData, index) => (
+            <div key={index + 3} className="flex-1 min-w-[240px] max-w-[300px]">
+              <WeatherBox
+                weatherData={weatherData}
+                isCelsius={true}
+                onExpand={() => onCitySelect?.(weatherData.name)}
+              />
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

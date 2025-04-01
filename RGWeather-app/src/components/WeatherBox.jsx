@@ -13,7 +13,7 @@ function WeatherBox({
 
   return (
     <div
-      className="weather-box cursor-pointer  opacity-90  p-4 bg-slate-700 rounded-xl shadow-lg backdrop-blur-sm w-48  mx-auto transition-all hover:scale-105"
+      className="weather-box cursor-pointer  opacity-90  p-4 bg-slate-700 rounded-xl shadow-lg backdrop-blur-sm w-48  mx-auto transition-all hover:scale-105 "
       onClick={onExpand}
     >
       <div className="grid grid-cols-2 gap-2 text-white whitespace-nowrap">
@@ -36,9 +36,11 @@ function WeatherBox({
         </div>
 
         <br />
-        <div className="space-y-1">
-          <p className="text-sm">💧Humidty:{weatherData.main.humidity}%</p>
-          <p className="text-sm">🌬️ Wind speed: {weatherData.wind.speed}m/s</p>
+        <div className="text-des space-y-1 ">
+          <p className=" text-sm ">💧Humidty:{weatherData.main.humidity}%</p>
+          <p className="text-sm  ">
+            🌬️ Wind speed: {weatherData.wind.speed}m/s
+          </p>
         </div>
       </div>
     </div>

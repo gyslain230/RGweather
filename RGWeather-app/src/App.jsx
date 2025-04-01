@@ -89,12 +89,23 @@ function App() {
     setIsExpanded(true);
   };
   //time and date
-  const now = new Date();
-  const localTimeString = now.toLocaleTimeString();
+  const [currentTime, setCurrentTime] = useState(new Date());
 
+  useEffect(() => {
+    // Set up the interval when component mounts
+    const timerID = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    // Clean up the interval when component unmounts
+    return () => clearInterval(timerID);
+  }, []); // Empty dependency array means this runs once on mount
+
+  // Format the time for display
+  const formattedTime = currentTime.toLocaleTimeString();
   return (
     <>
-      <div className="flex items-star justify-items-start m-auto ">
+      <div className="flex items-star justify-items-start gap-4">
         <img src="/logo.png" alt="weather logo" className=" size-20" />
         <h1 className="mt-4 ">RGWeather</h1>
       </div>
@@ -142,6 +153,7 @@ function App() {
           onError={handleLocationError}
         />
       )}
+
       <Suggestions
         onCitySelect={(cityName) => {
           setManualSearchPerformed(true);
@@ -149,14 +161,8 @@ function App() {
           fetchWeatherData(cityName);
         }}
       />
-      {/* RandomWeather component 
-      <Random
-        onCitiesSelected={setRandomCitiesWeather}
-        citiesWeather={randomCitiesWeather}
-        isCelsius={isCelsius}
-      />
-      */}
-      <h2 className="fixed bottom-0 right-0 p-4 ">{localTimeString}</h2>
+
+      <h2 className="fixed bottom-0 right-0 p-4 ">{formattedTime}</h2>
     </>
   );
 }
