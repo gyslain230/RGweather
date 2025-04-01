@@ -2,9 +2,13 @@ import "./App.css";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import WeatherCard from "./components/WeatherCard";
 import SearchBar from "./components/SearchBar";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import WeatherBox from "./components/WeatherBox";
 import Random from "./components/Suggestions";
+import LocationDetector from "./components/LocationDetector";
+
+const API_KEY = "f6e44c06f297e53dedc2ef34ca50548e";
+const BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
 
 function App() {
   const [city, setCity] = useState("");
@@ -16,11 +20,10 @@ function App() {
   // Add new state for forecast
   const [forecastData, setForecastData] = useState(null);
   const [randomCitiesWeather, setRandomCitiesWeather] = useState([]);
+  const [locationError, setLocationError] = useState("");
+  const [manualSearchPerformed, setManualSearchPerformed] = useState(false);
 
-  const API_KEY = "f6e44c06f297e53dedc2ef34ca50548e";
-  const BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
-
-  const fetchWeatherData = async (cityName) => {
+  const fetchWeatherData = useCallback(async (cityName) => {
     setLoading(true);
     setError("");
     try {
@@ -33,7 +36,6 @@ function App() {
       }
 
       const data = await response.json();
-      // Fetch 5-day forecast
       const forecastResponse = await fetch(
         `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&units=metric&appid=${API_KEY}`
       );
@@ -48,7 +50,31 @@ function App() {
       setError(err.message);
       setLoading(false);
     }
-  };
+  }, []);
+  const handleLocationDetected = useCallback(
+    async (lat, lon) => {
+      if (manualSearchPerformed) return;
+      setLoading(true);
+      try {
+        const reverseResponse = await fetch(
+          `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${API_KEY}`
+        );
+        if (!reverseResponse.ok) throw new Error("Location lookup failed");
+        const reverseData = await reverseResponse.json();
+        if (reverseData.length === 0) throw new Error("No city found");
+        const cityName = reverseData[0].name;
+        fetchWeatherData(cityName);
+      } catch (error) {
+        setError(error.message);
+        setLoading(false);
+      }
+    },
+    [fetchWeatherData, manualSearchPerformed]
+  );
+  const handleLocationError = useCallback((message) => {
+    setLocationError(message);
+  }, []);
+
   useEffect(() => {
     const fetchRandomCitiesWeather = async (cityNames) => {
       try {
@@ -72,6 +98,7 @@ function App() {
   const handleSearch = (e) => {
     e.preventDefault();
     if (city.trim()) {
+      setManualSearchPerformed(true);
       fetchWeatherData(city);
     }
   };
@@ -127,6 +154,12 @@ function App() {
         )}
           */}
       </div>
+      {!manualSearchPerformed && (
+        <LocationDetector
+          onLocationDetected={handleLocationDetected}
+          onError={handleLocationError}
+        />
+      )}
       {/* RandomWeather component 
       <Random
         onCitiesSelected={setRandomCitiesWeather}
