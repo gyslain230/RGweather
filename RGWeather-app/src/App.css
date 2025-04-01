@@ -44,3 +44,8 @@
 .read-the-docs {
   color: #888;
 }
+@media (max-width: 639px) {
+  .weather-card {
+    margin-top: 140px;
+  }
+}

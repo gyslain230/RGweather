@@ -18,7 +18,7 @@ function WeatherBox({
     >
       <div className="grid grid-cols-2 gap-2 text-white whitespace-nowrap">
         <div className="col-span-2">
-          <h3 className="text-lg font-bold">
+          <h3 className="text-lg font-bold text-wrap">
             {weatherData.name}, {weatherData.sys.country}
           </h3>
         </div>

@@ -4,9 +4,8 @@ import WeatherCard from "./components/WeatherCard";
 import SearchBar from "./components/SearchBar";
 import { useState, useEffect, useCallback } from "react";
 import WeatherBox from "./components/WeatherBox";
-import Random from "./components/Suggestions";
 import LocationDetector from "./components/LocationDetector";
-
+import Suggestions from "./components/Suggestions";
 const API_KEY = "f6e44c06f297e53dedc2ef34ca50548e";
 const BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
 
@@ -19,7 +18,6 @@ function App() {
   const [isExpanded, setIsExpanded] = useState(false);
   // Add new state for forecast
   const [forecastData, setForecastData] = useState(null);
-  const [randomCitiesWeather, setRandomCitiesWeather] = useState([]);
   const [locationError, setLocationError] = useState("");
   const [manualSearchPerformed, setManualSearchPerformed] = useState(false);
 
@@ -75,25 +73,6 @@ function App() {
     setLocationError(message);
   }, []);
 
-  useEffect(() => {
-    const fetchRandomCitiesWeather = async (cityNames) => {
-      try {
-        const promises = cityNames.map((city) =>
-          fetch(`${BASE_URL}?q=${city}&units=metric&appid=${API_KEY}`).then(
-            (res) => {
-              if (!res.ok) throw new Error("City not found");
-              return res.json();
-            }
-          )
-        );
-
-        const results = await Promise.all(promises);
-        setRandomCitiesWeather(results.filter((data) => data.cod === 200));
-      } catch (error) {
-        console.error("Error fetching random cities:", error);
-      }
-    };
-  }, []);
   // function to hadnle searche
   const handleSearch = (e) => {
     e.preventDefault();
@@ -109,10 +88,13 @@ function App() {
   const handleExpand = () => {
     setIsExpanded(true);
   };
+  //time and date
+  const now = new Date();
+  const localTimeString = now.toLocaleTimeString();
 
   return (
     <>
-      <div className="flex -ml-50 m-auto  -mt-90  ">
+      <div className="flex items-star justify-items-start m-auto ">
         <img src="/logo.png" alt="weather logo" className=" size-20" />
         <h1 className="mt-4 ">RGWeather</h1>
       </div>
@@ -160,6 +142,13 @@ function App() {
           onError={handleLocationError}
         />
       )}
+      <Suggestions
+        onCitySelect={(cityName) => {
+          setManualSearchPerformed(true);
+          setCity(cityName);
+          fetchWeatherData(cityName);
+        }}
+      />
       {/* RandomWeather component 
       <Random
         onCitiesSelected={setRandomCitiesWeather}
@@ -167,6 +156,7 @@ function App() {
         isCelsius={isCelsius}
       />
       */}
+      <h2 className="fixed bottom-0 right-0 p-4 ">{localTimeString}</h2>
     </>
   );
 }

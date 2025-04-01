@@ -1,35 +1,82 @@
-import { useEffect } from "react";
-import citylist from "../city.list.json";
+import { useEffect, useState } from "react";
 import WeatherBox from "./WeatherBox";
 
-function Random({ onCitiesSelected, citiesWeather, isCelsius }) {
-  // Get 6 random city names from JSON on mount
+// Import your city.list.json data (adjust path as needed)
+import cities from "../data/city.list.json";
+
+const API_KEY = "f6e44c06f297e53dedc2ef34ca50548e";
+const BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
+
+function Suggestions({ onCitySelect }) {
+  const [randomCitiesWeather, setRandomCitiesWeather] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
   useEffect(() => {
     const getRandomCities = () => {
-      const shuffled = [...citylist].sort(() => Math.random() - 0.5);
-      return shuffled.slice(0, 6).map((city) => city.name);
+      // Filter cities with valid names and country codes
+      const validCities = cities.filter(
+        (city) => city.name && city.country && city.coord
+      );
+
+      // Shuffle and select 6 unique cities
+      return [...validCities].sort(() => 0.5 - Math.random()).slice(0, 6);
     };
 
-    onCitiesSelected(getRandomCities());
-  }, [onCitiesSelected]);
+    const fetchWeatherData = async () => {
+      try {
+        const randomCities = getRandomCities();
+        const weatherPromises = randomCities.map((city) =>
+          fetch(
+            `${BASE_URL}?lat=${city.coord.lat}&lon=${city.coord.lon}&units=metric&appid=${API_KEY}`
+          ).then((res) => res.json())
+        );
+
+        const weatherData = await Promise.all(weatherPromises);
+        setRandomCitiesWeather(weatherData.filter((data) => data.cod === 200));
+        setLoading(false);
+      } catch (err) {
+        setError("Failed to load city suggestions");
+        setLoading(false);
+      }
+    };
+
+    fetchWeatherData();
+  }, []);
+
+  if (error) return <div className="text-center text-red-500 p-4">{error}</div>;
+  if (loading)
+    return <div className="text-center p-4">Loading suggestions...</div>;
 
   return (
-    <div className="mt-8 px-4">
-      <h2 className="text-2xl text-white mb-4 text-center">
-        Discover Random Cities
-      </h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {citiesWeather.map((weatherData, index) => (
-          <WeatherBox
-            key={`${weatherData.id}-${index}`}
-            weatherData={weatherData}
-            isCelsius={isCelsius}
-            onExpand={() => {}}
-          />
+    <div className="suggestions-container mt-8 px-4">
+      {/* First row of 3 cities */}
+      <div className="flex flex-wrap justify-center gap-4 mb-4">
+        {randomCitiesWeather.slice(0, 3).map((weatherData, index) => (
+          <div key={index} className="flex-1 min-w-[240px] max-w-[300px]">
+            <WeatherBox
+              weatherData={weatherData}
+              isCelsius={true}
+              onExpand={() => onCitySelect?.(weatherData.name)}
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* Second row of 3 cities */}
+      <div className="flex flex-wrap justify-center gap-4">
+        {randomCitiesWeather.slice(3, 6).map((weatherData, index) => (
+          <div key={index + 3} className="flex-1 min-w-[240px] max-w-[300px]">
+            <WeatherBox
+              weatherData={weatherData}
+              isCelsius={true}
+              onExpand={() => onCitySelect?.(weatherData.name)}
+            />
+          </div>
         ))}
       </div>
     </div>
   );
 }
 
-export default Random;
+export default Suggestions;

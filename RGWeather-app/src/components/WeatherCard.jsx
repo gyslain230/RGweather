@@ -29,7 +29,7 @@ function WeatherCard({
   };
 
   return (
-    <div className="weather-card mt-4 p-6 bg-slate-700  opacity-80  rounded-3xl shadow-lg backdrop-blur-sm max-w-2xl mx-auto">
+    <div className="weather-card mt-4 p-6 bg-slate-700  opacity-80  rounded-3xl shadow-lg backdrop-blur-sm max-w-2xl mx-auto sm:mt-35 ">
       <div className="header flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold text-white">
           {weatherData.name}, {weatherData.sys.country}

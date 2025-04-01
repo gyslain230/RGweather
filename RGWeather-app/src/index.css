@@ -19,6 +19,8 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  overflow: scroll;
 }
 
 a {
@@ -72,5 +74,11 @@ button:focus-visible {
   }
   button {
     background-color: #f9f9f9;
+  }
+}
+@media (max-width: 639px) {
+  :root {
+    background-repeat: no-repeat;
+    background-attachment: fixed;
   }
 }
