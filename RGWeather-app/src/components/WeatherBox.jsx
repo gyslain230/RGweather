@@ -5,6 +5,8 @@ function WeatherBox({
   toggleTemperatureUnit,
   onExpand, // Add this prop
 }) {
+  if (!weatherData) return null;
+
   const convertTemp = (temp) => {
     return isCelsius ? temp : (temp * 9) / 5 + 32;
   };
