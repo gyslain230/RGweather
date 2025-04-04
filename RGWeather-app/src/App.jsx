@@ -6,6 +6,9 @@ import { useState, useEffect, useCallback } from "react";
 import WeatherBox from "./components/WeatherBox";
 import LocationDetector from "./components/LocationDetector";
 import Suggestions from "./components/Suggestions";
+import RecentSearches from "./components/RecentSearches"; // Add this import
+//////////////////////////////////////////////////////////////////
+
 const API_KEY = "f6e44c06f297e53dedc2ef34ca50548e";
 const BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
 
@@ -20,6 +23,7 @@ function App() {
   const [forecastData, setForecastData] = useState(null);
   const [locationError, setLocationError] = useState("");
   const [manualSearchPerformed, setManualSearchPerformed] = useState(false);
+  const [recentWeathers, setRecentWeathers] = useState([]);
 
   const fetchWeatherData = useCallback(async (cityName) => {
     setLoading(true);
@@ -49,6 +53,34 @@ function App() {
       setLoading(false);
     }
   }, []);
+  useEffect(() => {
+    const fetchRecentWeather = async () => {
+      const storedSearches = localStorage.getItem("recentsearches");
+      if (!storedSearches) return;
+
+      const recentCities = JSON.parse(storedSearches)
+        .slice(-2)
+        .map((search) => search.text);
+
+      const weatherPromises = recentCities.map(async (city) => {
+        try {
+          const response = await fetch(
+            `${BASE_URL}?q=${city}&units=metric&appid=${API_KEY}`
+          );
+          if (!response.ok) return null;
+          return await response.json();
+        } catch (error) {
+          console.error("Error fetching recent city weather:", error);
+          return null;
+        }
+      });
+
+      const weatherResults = await Promise.all(weatherPromises);
+      setRecentWeathers(weatherResults.filter(Boolean));
+    };
+
+    fetchRecentWeather();
+  }, [weatherData]); // Refresh when main weather data changes
   const handleLocationDetected = useCallback(
     async (lat, lon) => {
       if (manualSearchPerformed) return;
@@ -105,6 +137,7 @@ function App() {
   const formattedTime = currentTime.toLocaleTimeString();
   return (
     <>
+      <RecentSearches recentWeathers={recentWeathers} isCelsius={isCelsius} />
       <div className="flex items-star justify-items-start gap-4">
         <img src="/logo.png" alt="weather logo" className=" size-20" />
         <h1 className="mt-4 ">RGWeather</h1>

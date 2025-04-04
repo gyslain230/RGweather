@@ -1,5 +1,32 @@
 // SearchBar.jsx (Child Component)
 import ErrorMessage from "./ErrorMessage";
+
+let searches = [{ text: "" }];
+function savesearches(city) {
+  try {
+    localStorage.setItem("recentsearches", JSON.stringify(searches));
+    let newSearch = { city };
+    newSearch.value = "";
+
+    alert("Quotes saved successfully!");
+  } catch (e) {
+    alert("Failed to save quotes.");
+    console.error("Error saving quotes: ", e);
+  }
+}
+function addsearch(searches, newSearchText) {
+  // Create a new search object
+
+  /*let searchesObject = {
+    text: newSearch,
+  };*/
+
+  // Add the new search object to the quotes array
+  searches.push({ text: newSearchText });
+
+  savesearches();
+}
+
 function SearchBar({ city, setCity, handleSearch, loading, error }) {
   return (
     <form onSubmit={handleSearch} className="justify-items-center mb-8 mt-auto">
@@ -14,6 +41,10 @@ function SearchBar({ city, setCity, handleSearch, loading, error }) {
         <button
           type="submit"
           className="bg-slate-500 rounded-r-xl rounded-l-none w-24 sm:w-20  hover:bg-slate-400 transition duration-90"
+          onClick={() => {
+            let newSearch = { city };
+            addsearch(searches, city);
+          }}
         >
           Search
         </button>

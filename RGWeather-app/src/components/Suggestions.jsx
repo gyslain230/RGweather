@@ -3,6 +3,7 @@ import WeatherBox from "./WeatherBox";
 
 // Import your city.list.json data (adjust path as needed)
 import cities from "../data/city.list.json";
+import RecentSearches from "./RecentSearches";
 
 const API_KEY = "f6e44c06f297e53dedc2ef34ca50548e";
 const BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
