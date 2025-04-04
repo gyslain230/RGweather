@@ -137,7 +137,6 @@ function App() {
   const formattedTime = currentTime.toLocaleTimeString();
   return (
     <>
-      <RecentSearches recentWeathers={recentWeathers} isCelsius={isCelsius} />
       <div className="flex items-star justify-items-start gap-4">
         <img src="/logo.png" alt="weather logo" className=" size-20" />
         <h1 className="mt-4 ">RGWeather</h1>
@@ -171,6 +170,7 @@ function App() {
                 />
               )}
         </div>
+        <RecentSearches recentWeathers={recentWeathers} isCelsius={isCelsius} />
         {/* {weatherData && (
           <WeatherCard
             weatherData={weatherData}
