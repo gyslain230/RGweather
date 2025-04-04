@@ -7,10 +7,7 @@ function savesearches(city) {
     localStorage.setItem("recentsearches", JSON.stringify(searches));
     let newSearch = { city };
     newSearch.value = "";
-
-    alert("Quotes saved successfully!");
   } catch (e) {
-    alert("Failed to save quotes.");
     console.error("Error saving quotes: ", e);
   }
 }
