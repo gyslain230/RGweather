@@ -143,7 +143,6 @@ function App() {
       </div>
 
       <div>
-        ;
         <SearchBar
           city={city}
           setCity={setCity}
