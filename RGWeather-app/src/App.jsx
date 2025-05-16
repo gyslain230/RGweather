@@ -1,4 +1,5 @@
 import "./App.css";
+import { Analytics } from "@vercel/analytics/next";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import WeatherCard from "./components/WeatherCard";
 import SearchBar from "./components/SearchBar";
@@ -193,7 +194,7 @@ function App() {
           fetchWeatherData(cityName);
         }}
       />
-
+      <Analytics />
       <h2 className="fixed bottom-0 right-0 p-4 ">{formattedTime}</h2>
     </>
   );
